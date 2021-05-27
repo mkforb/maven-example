@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- GAV обязательная информация -->
+    <groupId>com.ifmo.jjd</groupId>
+    <artifactId>maven-example</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <!-- Необязательная информация -->
+    <name>Maven Example</name> <!-- Название, можно использовать пробелы, любой регистр, любые символы. Будет отражено на сайте, если он будет генерироваться -->
+    <description>Maven Project description</description> <!-- Описание проекта (что для чего) -->
+    <url>https://maven-example.org</url> <!-- Если есть ссылка на проект, можно указать здесь -->
+
+    <!-- Необязательная, используемая для сборки -->
+    <!-- тип файла архива, который будет доступен в результате сборки
+         jar (по умолчанию)
+         war (web приложения)
+         pom (для родителей в модульной сборке)
+         ear (как jar, но для enterprise-приложений) -->
+    <packaging>jar</packaging>
+
+    <!-- Свойства -->
+    <properties>
+        <!-- Минимальная версия языка для исходников, не может быть больше версии установленной JDK -->
+        <maven.compiler.source>11</maven.compiler.source>
+        <!-- Минимальная версия для скомпилированных файлов -->
+        <maven.compiler.target>11</maven.compiler.target>
+        <!-- source и target обязательные, чтобы сборщик понимал что к чему -->
+
+        <!-- Кодировка -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.build.outputEncoding>UTF-8</project.build.outputEncoding>
+
+        <!-- Все локальные переменные, используемые в POM-файле, создаются в теге properties -->
+        <log4j.version>2.14.1</log4j.version>
+    </properties>
+
+    <!-- Репозитории maven: в них хранятся артефакты (jar, war архивы) приложений -->
+    <!-- Артефакт - архив приложения. Обычно это библиотеки, фреймворки -->
+    <!-- У каждого артефакта должен быть groupId, artifactId, version -->
+    <!-- 1. Центральный (глобальный). В центральном репо хранятся общедоступные библиотеки. https://mvnrepository.com/  -->
+    <!-- 2. Локальный. На компьютере пользователя, папка /.m2/repository в папке пользователя -->
+    <!-- При загрзке библиотеки мавен обращается в локальный репо. Если там нет, то в центральный -->
+    <!-- 3. Корпоративный. Будет доступна только для компании. Прописывается так: -->
+    <!-- Если несколько репоизториев, то будет несколько блоков <repository> -->
+    <!-- <repositories>
+        <repository>
+            <id>id репозитория</id>
+            <url>ссылка на репозиторий</url>
+        </repository>
+        <repository>
+            <id>id репозитория 2</id>
+            <url>ссылка на репозиторий 2</url>
+        </repository>
+    </repositories> -->
+
+    <!-- Зависимости проекта - все библиотеки, которые нужны проекту -->
+    <!-- На каждую зависимости свой блок <dependency> -->
+    <!-- Если версию не указать, то скачается последняя. Надо указывать, чтобы не было потом ошибок при выходе новой версии -->
+    <dependencies>
+        <!-- Если несолько зависимостей из одной библиотеки, то версии должны быть одинаковые, чтобы не было конфликтов -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>${log4j.version}</version> <!-- 2.14.1 -->
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>${log4j.version}</version> <!-- 2.14.1 -->
+            <!-- Область видимости зависимости: -->
+            <scope>compile</scope>
+            <!-- 1. compile (можно не указывать, по умолчанию) - зависимость доступна всегда (во время разработки, компиляции, выполнения, тестирования) -->
+            <!-- 2. test - доступна только во время тестирования -->
+            <!-- 3. provided - не попадет в финальную сборку, т.е. не будет доступна при выполнении, так как не нужна (например, генераторы кода) -->
+            <!-- 4. runtime - доступна при выполнении и тестировании, нет прямого доступа (обращения) к классам библиотеки (например, библиотека обращения к БД) -->
+            <!-- 5. import - для модульной сборки, описывает зависимость одного модуля от другого -->
+            <!-- 6. system - обязательно должен быть добавлен тег <systemPath>путь к библиотеке на компьютере</systemPath> -->
+        </dependency>
+    </dependencies>
+
+    <!-- 1.0-SNAPSHOT - версия 1.0 находится в разработке. Она рабочая, но может обновляться  -->
+    <!-- 1.0 - версия больше не разрабатывается. Обновлений кода не будет. Если будут обновления, то это будет другая версия -->
+    <!-- Если версия указана с SNAPSHOT, то мавен всегда будет обращаться к центральному репо, вдруг вышли обновления -->
+
+    <!-- После изменений в POM-файле надо обновить: -->
+    <!-- 1. ПКМ на POM-файл -> Maven -> Reload project -->
+    <!-- 2. Значок вверху справа с буквой m -->
+    <!-- 3. Справа вкладка Maven -> Первая иконка (Reload All Maven Projects) -->
+
+    <!-- Если какие-то библиотеки зависят от других, то эти другие прописывать не надо, они подгрузятся автоматически -->
+
+    <build>
+        <plugins>
+            <plugin>
+                <!-- нужен чтобы сгенерировать архив, в который войдет не только наш код, но и код всех необходимых библиотек -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.4</version>
+                <!-- Привязка к фазам сборки -->
+                <executions>
+                    <execution>
+                        <phase>package</phase> <!-- фаза ЖЦ -->
+                        <goals> <!-- описывает задачи, которые решает плагин на данной фазе -->
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <!-- если jar должен быть исполняемым, нужно задать параметры -->
+                    <transformers>
+                        <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                            <mainClass>com.ifmo.jjd.Application</mainClass> <!-- полное имя класса с точкой входа -->
+                        </transformer>
+                    </transformers>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <!-- Генерирует документацию к нашим классам -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.2.0</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>aggregate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <show>private</show> <!-- Описание приватных свойств и методов будет включено в документацию -->
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <!-- Для генерации сайта -->
+                <!-- По умолчанию уже есть этот плагин, но другой версии. Можем использовать другую версию,
+                     а можем использовать версию по умолчанию и расширить его конфигурацию -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.9.1</version>
+                <configuration>
+                    <locales>en,ru</locales>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    <!--  -->
+    <!--  -->
+    <!--  -->
+
+
+</project>

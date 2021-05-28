@@ -150,6 +150,42 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <!-- У профиля должен быть уникальный идентификатор -->
+            <id>dev</id> <!-- Идентификатор профиля, придумываем сами -->
+            <!-- Если несколько профилей, то активен по умолчанию только один -->
+            <activation>
+                <activeByDefault>true</activeByDefault> <!-- Означает что профиль активен по умолчанию -->
+            </activation>
+            <!-- У каждого профиля могут быть свои зависимости, свой билд, свои плагины, указание на свою папку с ресурсами -->
+            <!-- Зависимости профиля -->
+            <!-- build профиля -->
+            <build>
+                <!-- Плагины профиля -->
+                <!-- Папка с ресурсам профиля -->
+                <resources>
+                    <resource>
+                        <directory>src/main/resources/development</directory>
+                    </resource>
+                </resources>
+            </build>
+        </profile>
+        <profile>
+            <id>prod</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <resources>
+                    <resource>
+                        <directory>src/main/resources/production</directory>
+                    </resource>
+                </resources>
+            </build>
+        </profile>
+    </profiles>
     <!--  -->
     <!--  -->
     <!--  -->

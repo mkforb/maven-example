@@ -1,26 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="warn" name="Application" >
+<Configuration status="warn" name="Application" > <!-- Configuration - корневой тег. Здесь атрибут status как status в properties-файл. name - имя конфигурации, необязательный атрибут -->
     <Appenders>
+        <!-- Тег RollingFile указывает на тип аппендера (логирование в файл), name - имя аппендера -->
+        <!-- fileName - имя файла -->
+        <!-- Если превысит размер, то будет создаваться архив лога -->
+        <!-- filePattern - архивный лог файл -->
         <RollingFile name="RollingFile" fileName="logs/application.log"
                      filePattern="logs/$${date:yyyy-MM}/app-%d{MM-dd-yyyy}-%i.log.gz">
             <PatternLayout>
+                <!-- Формат записи лога -->
                 <!--                https://logging.apache.org/log4j/2.x/manual/layouts.html-->
                 <Pattern>%date %level %class{1.}:%line [%thread] %message%n</Pattern>
             </PatternLayout>
-            <Policies>
-                <SizeBasedTriggeringPolicy size="200 MB"/>
+            <Policies> <!-- Если предполагается создание архивных файлов, данный тег необходим -->
+                <!-- Может быть несколько стратегий -->
+                <SizeBasedTriggeringPolicy size="200 MB"/> <!-- Стратегия по размеру. Когда превысит этот размер, создается новый архивный файл, файл с логом очищается -->
 
                 <!-- минута час день месяц день_недели-->
-                <!--                <CronTriggeringPolicy schedule="0 0 * * * ?"/>-->
+                <!--                <CronTriggeringPolicy schedule="0 0 * * * ?"/>--> <!-- Создание архивного файла по расписанию через синтаксис крона: schedule="0 0 * * * ?" - минуты, часы, день месяца, номер месяца, день недели. "10 8 * * sat ?" - в 8:10 каждую субботу -->
 
-                <!--                <TimeBasedTriggeringPolicy interval="3" modulate="true"/>-->
+                <!--                <TimeBasedTriggeringPolicy interval="3" modulate="true"/>--> <!-- Стратегия по времени - через сколько часов будет создаваться новый лог-файл. modulate="true" - округление времени создания -->
             </Policies>
             <DefaultRolloverStrategy max="3"/>
         </RollingFile>
     </Appenders>
     <Loggers>
-        <Root level="info">
-            <AppenderRef ref="RollingFile"/>
+        <Root level="info"> <!-- Аналог rootLogger в properties-файле, level - уровень логирования нашего кода -->
+            <AppenderRef ref="RollingFile"/> <!-- Связь с аппендером по его имени -->
         </Root>
     </Loggers>
 </Configuration>
